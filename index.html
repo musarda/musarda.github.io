@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; manifest-src 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#050507">
+
+  <title>codechain</title>
+  <meta name="description" content="codechain — projects, links and more.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="codechain">
+  <meta property="og:description" content="codechain — projects, links and more.">
+  <meta property="og:image" content="logo.png">
+  <meta name="twitter:card" content="summary">
+
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <link rel="stylesheet" href="css/style.css">
+
+  <script src="data/site.js" defer></script>
+  <script src="data/projects.js" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+
+  <nav class="topbar glass" id="topbar" aria-label="Quick navigation" inert>
+    <a class="topbar-brand" href="#profile">
+      <img id="topbar-logo" src="logo.png" alt="" width="30" height="30">
+      <span id="topbar-name">codechain</span>
+    </a>
+    <div class="topbar-links">
+      <a href="#links-section" id="topbar-links-link">Links</a>
+      <a href="#projects-section">Projects</a>
+    </div>
+    <button class="icon-btn share-btn" type="button" aria-label="Share this site" title="Share"></button>
+  </nav>
+
+  <main class="container">
+    <header class="profile glass reveal" id="profile">
+      <button class="icon-btn share-btn profile-share" type="button" aria-label="Share this site" title="Share"></button>
+      <div class="avatar-wrap">
+        <img class="avatar" id="avatar" src="logo.png" alt="codechain logo" width="112" height="112">
+      </div>
+      <h1 class="name" id="name">codechain</h1>
+      <p class="handle" id="handle" hidden></p>
+      <p class="bio" id="bio" hidden></p>
+      <div class="meta" id="meta"></div>
+      <nav class="socials" id="socials" aria-label="Social media"></nav>
+    </header>
+
+    <section id="links-section" aria-labelledby="links-title">
+      <h2 class="section-title" id="links-title">Links</h2>
+      <div class="links" id="links"></div>
+    </section>
+
+    <section id="projects-section" aria-labelledby="projects-title">
+      <h2 class="section-title" id="projects-title">Projects <span class="count" id="project-count"></span></h2>
+      <div class="project-tools" id="project-tools">
+        <label class="search" id="search" hidden>
+          <input id="project-search" type="search" placeholder="Search projects…" autocomplete="off" spellcheck="false" aria-label="Search projects">
+          <kbd aria-hidden="true">/</kbd>
+        </label>
+        <div class="filters" id="filters" role="toolbar" aria-label="Filter by tag"></div>
+      </div>
+      <div class="projects" id="projects"></div>
+      <p class="notice" id="projects-notice" hidden></p>
+    </section>
+
+    <footer class="footer" id="footer"></footer>
+  </main>
+
+  <dialog class="project-dialog" id="project-dialog" aria-labelledby="pd-title">
+    <article class="pd" id="pd" tabindex="-1" autofocus>
+      <header class="pd-head">
+        <p class="pd-crumb" id="pd-crumb"></p>
+        <div class="pd-head-actions">
+          <button class="icon-btn" id="pd-share" type="button" aria-label="Copy project link" title="Copy link"></button>
+          <button class="icon-btn" id="pd-close" type="button" aria-label="Close" title="Close (Esc)"></button>
+        </div>
+      </header>
+      <div class="pd-content" id="pd-content"></div>
+    </article>
+  </dialog>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Image preview">
+    <div class="lb-inner" id="lb-inner">
+      <figure class="lb-figure">
+        <img class="lb-img" id="lb-img" alt="">
+        <figcaption class="lb-caption" id="lb-caption"></figcaption>
+      </figure>
+    </div>
+    <button class="lb-btn lb-close" id="lb-close" type="button" aria-label="Close"></button>
+    <button class="lb-btn lb-prev" id="lb-prev" type="button" aria-label="Previous image"></button>
+    <button class="lb-btn lb-next" id="lb-next" type="button" aria-label="Next image"></button>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <noscript>
+    <p class="noscript">This site uses JavaScript to display its content. Please enable JavaScript.</p>
+  </noscript>
+</body>
+</html>
