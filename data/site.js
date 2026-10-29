@@ -16,20 +16,20 @@ window.SITE = {
 
   links: [
     {
+      title: "Instagram",
+      url: "https://www.instagram.com/codechainyt",
+      size: "wide",
+      accent: "#ff5ca8",
+    },
+    {
       title: "GitHub",
       url: "https://github.com/musarda",
-      size: "wide",
       accent: "#a78bfa",
     },
     {
       title: "YouTube",
       url: "https://www.youtube.com/@codechain",
       accent: "#ff5d5d",
-    },
-    {
-      title: "Instagram",
-      url: "https://www.instagram.com/codechainyt",
-      accent: "#ff5ca8",
     },
     {
       title: "Discord",
