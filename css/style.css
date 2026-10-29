@@ -37,6 +37,7 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
   scroll-behavior: smooth;
   scroll-padding-top: 24px;
   scrollbar-gutter: stable;
@@ -567,6 +568,14 @@ html.modal-open .bg::after { animation-play-state: paused; }
 
 .chip:hover { color: var(--text); border-color: var(--stroke-2); }
 
+.chip-more {
+  border-style: dashed;
+  background: transparent;
+  color: var(--text-3);
+}
+
+.filters .chip.reveal { animation-duration: 0.4s; animation-delay: calc(var(--i, 0) * 30ms); }
+
 .chip[aria-pressed="true"] {
   background: rgba(255, 255, 255, 0.92);
   border-color: transparent;
@@ -782,9 +791,14 @@ dialog { color: inherit; }
 
 .project-dialog::backdrop { background: rgba(4, 4, 8, 0.78); }
 
-.project-dialog[open],
-.project-dialog[open]::backdrop { animation: fade 0.16s ease-out; }
+.project-dialog[open] { animation: dialog-in 0.38s var(--ease); }
+.project-dialog[open]::backdrop { animation: fade 0.32s ease-out; }
+.project-dialog.is-closing { animation: dialog-out 0.2s ease-in forwards; }
+.project-dialog.is-closing::backdrop { animation: fade-out 0.2s ease-in forwards; }
 @keyframes fade { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes dialog-in { from { opacity: 0; transform: translateY(18px) scale(0.98); } }
+@keyframes dialog-out { to { opacity: 0; transform: translateY(12px) scale(0.98); } }
 
 .pd {
   max-height: calc(100dvh - 32px);
@@ -1106,8 +1120,7 @@ dialog { color: inherit; }
 
 .md-details > summary::marker { color: var(--project-accent); }
 .md-details > summary:hover { color: var(--tint); }
-.md-details[open] > summary { border-bottom: 1px solid var(--stroke); }
-.md-details-body { padding: 14px; }
+.md-details-body { padding: 14px; border-top: 1px solid var(--stroke); }
 
 .code-head { padding: 0 8px 0 0; }
 
