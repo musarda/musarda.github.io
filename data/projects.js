@@ -19,20 +19,6 @@ window.PROJECTS = [
       > [!TIP]
       > Want to see it right now? Click **Live Demo** at the top of this page. It runs on this site, with no download needed.
 
-      ## 📸 Screenshots
-
-      ![Close-up: ASCII characters|720](assets/projects/gargantua-ascii/screenshot-detail.png)
-
-      🔍 Up close, it's all characters. Every cell on screen is one of these, from empty to dense:
-
-      \`\`\`text
-       .\`'-,:;~=+*xoO#%&@
-      \`\`\`
-
-      ![4:5 portrait window mode|320](assets/projects/gargantua-ascii/screenshot-portrait.png)
-
-      📱 The 4:5 app window opened by \`start.bat\` (made for Instagram).
-
       ## ✨ Features
 
       | Feature | What it does |
@@ -270,7 +256,7 @@ window.PROJECTS = [
     date: "2026-10",
     repo: "https://github.com/musarda/gargantua-ascii",
     demo: "assets/projects/gargantua-ascii/demo/index.html",
-    featured: false,
+    featured: true,
     accent: "#ff9637",
     code: [
       { title: "gargantua.js", file: "assets/projects/gargantua-ascii/demo/gargantua.js" },
@@ -1949,7 +1935,7 @@ window.PROJECTS = [
     date: "2023-03",
     repo: "https://github.com/musarda/Arduino-Parking-Sensor",
     demo: "",
-    featured: true,
+    featured: false,
     accent: "#f97316",
     code: [
       {
