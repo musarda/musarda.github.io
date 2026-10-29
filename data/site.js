@@ -8,8 +8,8 @@ window.SITE = {
   location: "",
 
   socials: [
-    { platform: "github",    url: "https://github.com/musarda" },
     { platform: "instagram", url: "https://www.instagram.com/codechainyt" },
+    { platform: "github",    url: "https://github.com/musarda" },
     { platform: "youtube",   url: "https://www.youtube.com/@codechain" },
     { platform: "discord",   url: "", disabled: true },
   ],
