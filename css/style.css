@@ -55,6 +55,7 @@ body {
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-wrap: break-word;
   overflow-x: hidden;
 }
 
@@ -979,7 +980,6 @@ dialog { color: inherit; }
   color: var(--text-2);
   font-size: 15px;
   line-height: 1.7;
-  overflow-wrap: anywhere;
 }
 
 .md p, .md ul, .md ol, .md pre { margin: 0 0 14px; }
@@ -1031,6 +1031,8 @@ dialog { color: inherit; }
   color: color-mix(in srgb, var(--project-accent) 30%, var(--text));
   font-family: var(--mono);
   font-size: 0.86em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .md pre {
@@ -1052,7 +1054,7 @@ dialog { color: inherit; }
 .md-table { margin: 0 0 16px; overflow-x: auto; border: 1px solid var(--stroke); border-radius: 12px; }
 .md table { width: 100%; border-collapse: collapse; font-size: 14px; }
 .md th, .md td { padding: 9px 14px; border-bottom: 1px solid var(--stroke); text-align: left; }
-.md th { background: color-mix(in srgb, var(--project-accent) 10%, transparent); color: var(--text); font-weight: 600; }
+.md th { background: color-mix(in srgb, var(--project-accent) 10%, transparent); color: var(--text); font-weight: 600; white-space: nowrap; }
 .md tbody tr:last-child td { border-bottom: 0; }
 .md tbody tr:nth-child(even) { background: rgba(255, 255, 255, 0.025); }
 .md th.is-center, .md td.is-center { text-align: center; }
