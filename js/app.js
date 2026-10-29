@@ -11,6 +11,8 @@
   const SVG_NS = 'http://www.w3.org/2000/svg';
   const PROJECT_HASH = /^#\/(?:project|proje)\/([a-z0-9-]+)\/?$/;
   const MAX_CODE_FILE_BYTES = 512 * 1024;
+  const VISIBLE_TAG_COUNT = 6;
+  const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   const $ = (selector) => document.querySelector(selector);
   const str = (value) => (typeof value === 'string' ? value : typeof value === 'number' ? String(value) : '');
@@ -474,6 +476,34 @@
 
   const RICH_BLOCK = /(`{3,})[ \t]*([\w+#.-]*)[^\n]*\n([\s\S]*?)\1|^[ \t]*<details>[ \t]*\n[ \t]*<summary>(.*?)<\/summary>[ \t]*\n([\s\S]*?)^[ \t]*<\/details>[ \t]*$|^[ \t]*<div align="center">[ \t]*\n([\s\S]*?)^[ \t]*<\/div>[ \t]*$/gm;
 
+  function smoothDetails(summary, body) {
+    const details = el('details', { class: 'md-details' }, summary, body);
+    let anim = null;
+    let closing = false;
+
+    summary.addEventListener('click', (e) => {
+      if (REDUCED_MOTION.matches) return;
+      e.preventDefault();
+      const opening = !details.open || closing;
+      const start = details.offsetHeight;
+      if (anim) anim.cancel();
+      details.open = true;
+      closing = !opening;
+      const frame = details.offsetHeight - details.clientHeight;
+      const end = opening ? details.offsetHeight : summary.offsetHeight + frame;
+      details.style.overflow = 'hidden';
+      anim = details.animate({ height: [`${start}px`, `${end}px`] }, { duration: 280, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
+      body.animate({ opacity: opening ? [0, 1] : [1, 0] }, { duration: 280, easing: 'ease', fill: 'none' });
+      anim.onfinish = () => {
+        if (closing) details.open = false;
+        closing = false;
+        details.style.overflow = '';
+        anim = null;
+      };
+    });
+    return details;
+  }
+
   function appendRich(parent, source) {
     const re = new RegExp(RICH_BLOCK);
     let last = 0;
@@ -484,7 +514,7 @@
       if (summary != null) {
         const body = el('div', { class: 'md-details-body' });
         appendRich(body, dedent(details));
-        parent.append(el('details', { class: 'md-details' }, el('summary', {}, inline(summary.trim())), body));
+        parent.append(smoothDetails(el('summary', {}, inline(summary.trim())), body));
       } else if (centered != null) {
         const box = el('div', { class: 'md-center' });
         appendRich(box, dedent(centered));
@@ -642,6 +672,7 @@
   projects.sort((a, b) => (b.featured - a.featured) || (dateKey(b.date) - dateKey(a.date)));
 
   let activeTag = null;
+  let showAllTags = false;
   let query = '';
 
   const lower = (text) => text.toLocaleLowerCase('en-US');
@@ -694,7 +725,7 @@
     return card;
   }
 
-  function renderFilters() {
+  function renderFilters(animateExtra = false) {
     const filters = $('#filters');
     filters.replaceChildren();
     const tags = [...new Set(projects.flatMap((p) => p.tags))];
@@ -703,7 +734,25 @@
       class: 'chip', type: 'button', 'aria-pressed': String(activeTag === value), text: label,
       onclick: () => { activeTag = value; renderFilters(); renderProjectGrid(); },
     });
-    filters.append(chip('All', null), ...tags.map((t) => chip(t, t)));
+    const hiddenCount = tags.length - VISIBLE_TAG_COUNT;
+    const activeHidden = tags.indexOf(activeTag) >= VISIBLE_TAG_COUNT;
+    const expanded = showAllTags || activeHidden;
+    const shown = hiddenCount > 0 && !expanded ? tags.slice(0, VISIBLE_TAG_COUNT) : tags;
+    filters.append(chip('All', null), ...shown.map((t, i) => {
+      const node = chip(t, t);
+      if (animateExtra && i >= VISIBLE_TAG_COUNT) {
+        node.classList.add('reveal');
+        node.style.setProperty('--i', String(i - VISIBLE_TAG_COUNT));
+      }
+      return node;
+    }));
+    if (hiddenCount > 0 && !activeHidden) {
+      filters.append(el('button', {
+        class: 'chip chip-more', type: 'button', 'aria-expanded': String(expanded),
+        text: expanded ? 'Show less' : `+${hiddenCount} more`,
+        onclick: () => { showAllTags = !expanded; renderFilters(showAllTags); },
+      }));
+    }
   }
 
   function clearFilters() {
@@ -963,12 +1012,37 @@
     document.documentElement.classList.toggle('modal-open', Boolean(document.querySelector('dialog[open]')));
   };
 
+  let closeTimer = 0;
+
+  function closeDialog() {
+    if (!dialog.open || closeTimer) return;
+    if (REDUCED_MOTION.matches) {
+      dialog.close();
+      return;
+    }
+    dialog.classList.add('is-closing');
+    closeTimer = setTimeout(() => {
+      closeTimer = 0;
+      dialog.classList.remove('is-closing');
+      dialog.close();
+    }, 200);
+  }
+
   function openProject(project) {
+    const switching = dialog.open && !closeTimer;
+    if (closeTimer) {
+      clearTimeout(closeTimer);
+      closeTimer = 0;
+      dialog.classList.remove('is-closing');
+    }
     renderProjectDetail(project);
     document.title = `${project.title} · ${baseTitle()}`;
     if (!dialog.open) {
       dialog.showModal();
       syncModalState();
+    }
+    if (switching && !REDUCED_MOTION.matches) {
+      pdContent.animate({ opacity: [0, 1], transform: ['translateY(8px)', 'none'] }, { duration: 300, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' });
     }
     pd.scrollTo(0, 0);
     pd.focus({ preventScroll: true });
@@ -981,7 +1055,7 @@
       if (!isInitial) openedInSession = true;
       openProject(project);
     } else if (dialog.open) {
-      dialog.close();
+      closeDialog();
     }
   }
 
@@ -995,12 +1069,17 @@
     openedInSession = false;
   });
 
+  dialog.addEventListener('cancel', (e) => {
+    e.preventDefault();
+    closeDialog();
+  });
+
   dialog.addEventListener('click', (e) => {
-    if (e.target === dialog) dialog.close();
+    if (e.target === dialog) closeDialog();
   });
 
   $('#pd-close').append(icon('close', 18));
-  $('#pd-close').addEventListener('click', () => dialog.close());
+  $('#pd-close').addEventListener('click', closeDialog);
   $('#pd-share').append(icon('link', 17));
   $('#pd-share').addEventListener('click', () => shareLink(window.location.href, document.title));
 
